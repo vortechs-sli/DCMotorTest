@@ -1,68 +1,134 @@
 /* 
-This is a test sketch for the Adafruit assembled Motor Shield for Arduino v2
-It won't work with v1.x motor shields! Only for the v2's with built in PWM
-control
-
-For use with the Adafruit Motor Shield v2 
----->	http://www.adafruit.com/products/1438
+aih yah so many edits that i had to make but didnt have time
+-kalie 4.18
 */
 
+// Calling the libraries
 #include <Wire.h>
 #include <Adafruit_MotorShield.h>
-#include "utility/Adafruit_MS_PWMServoDriver.h"
+// #include "utility/Adafruit_MS_PWMServoDriver.h"
 
 // Create the motor shield object with the default I2C address
 Adafruit_MotorShield AFMS = Adafruit_MotorShield(); 
 // Or, create it with a different I2C address (say for stacking)
 // Adafruit_MotorShield AFMS = Adafruit_MotorShield(0x61); 
 
-// Select which 'port' M1, M2, M3 or M4. In this case, M1
-Adafruit_DCMotor *myMotor = AFMS.getMotor(1);
-// You can also make another motor on port M2
-//Adafruit_DCMotor *myOtherMotor = AFMS.getMotor(2);
+// Motor on port M1: right
+Adafruit_DCMotor *driveMotor1 = AFMS.getMotor(1);
+// Motor on port M2: left
+Adafruit_DCMotor *driveMotor2 = AFMS.getMotor(2);
+// Motor on port M1: right
+Adafruit_DCMotor *reelMotor1 = AFMS.getMotor(3);
+// Motor on port M2: left
+Adafruit_DCMotor *reelMotor2 = AFMS.getMotor(4);
 
 void setup() {
   Serial.begin(9600);           // set up Serial library at 9600 bps
-  Serial.println("Adafruit Motorshield v2 - DC Motor test!");
+  Serial.println("DC Motor test");
 
   AFMS.begin();  // create with the default frequency 1.6KHz
   //AFMS.begin(1000);  // OR with a different frequency, say 1KHz
   
   // Set the speed to start, from 0 (off) to 255 (max speed)
-  myMotor->setSpeed(150);
-  myMotor->run(FORWARD);
+  driveMotor1->setSpeed(180);
+  driveMotor1->run(FORWARD);
   // turn on motor
-  myMotor->run(RELEASE);
+  driveMotor1->run(RELEASE);
+
+  // Set the speed to start, from 0 (off) to 255 (max speed)
+  driveMotor2->setSpeed(180);
+  driveMotor2->run(FORWARD);
+  // turn on motor
+  driveMotor2->run(RELEASE);
+
+  // Set the speed to start, from 0 (off) to 255 (max speed)
+  reelMotor1->setSpeed(180);
+  reelMotor1->run(FORWARD);
+  // turn on motor
+  reelMotor1->run(RELEASE);
+
+  // Set the speed to start, from 0 (off) to 255 (max speed)
+  reelMotor2->setSpeed(180);
+  reelMotor2->run(FORWARD);
+  // turn on motor
+  reelMotor2->run(RELEASE);
 }
 
 void loop() {
-  uint8_t i;
+
+  //
   
-  Serial.print("tick");
-
-  myMotor->run(FORWARD);
-  for (i=0; i<255; i++) {
-    myMotor->setSpeed(i);  
-    delay(10);
-  }
-  for (i=255; i!=0; i--) {
-    myMotor->setSpeed(i);  
-    delay(10);
-  }
+  Serial.println("Go forward");
+  driveMotor1->run(FORWARD);
+  driveMotor2->run(FORWARD);
+  delay(10000);
   
-  Serial.print("tock");
+  //
+  
+  Serial.println("Lower bridge");
+  reelMotor1->run(FORWARD);
+  reelMotor2->run(FORWARD);
+  delay(10000);
 
-  myMotor->run(BACKWARD);
-  for (i=0; i<255; i++) {
-    myMotor->setSpeed(i);  
-    delay(10);
-  }
-  for (i=255; i!=0; i--) {
-    myMotor->setSpeed(i);  
-    delay(10);
-  }
+  //
 
-  Serial.print("tech");
-  myMotor->run(RELEASE);
-  delay(1000);
+  Serial.println("Go forward");
+  driveMotor1->run(FORWARD);
+  driveMotor2->run(FORWARD);
+  delay(10000);
+
+  //
+
+  Serial.println("Raise bridge");
+  reelMotor1->run(BACKWARD);
+  reelMotor2->run(BACKWARD);
+  delay(10000);
+  
+  //
+
+  Serial.println("180");
+  driveMotor1->run(FORWARD);
+  driveMotor2->run(BACKWARD);
+  delay(10000);
+
+  //
+
+  /* From this point on, the drive motors must be reversed because the robot has turned around. */
+
+  Serial.println("Go forward");
+  driveMotor1->run(BACKWARD);
+  driveMotor2->run(BACKWARD);
+  delay(10000);
+
+  //
+
+  // This is a guess, must be tested
+  Serial.println("Lower bridge");
+  reelMotor1->run(FORWARD);
+  reelMotor2->run(FORWARD);
+  delay(10000);
+
+  //
+
+  Serial.println("Go forward");
+  driveMotor1->run(BACKWARD);
+  driveMotor2->run(BACKWARD);
+  delay(10000);
+
+  //
+
+  // This is a guess, must be tested
+  Serial.println("Raise bridge");
+  reelMotor1->run(BACKWARD);
+  reelMotor2->run(BACKWARD);
+  delay(10000);
+
+  //
+
+  Serial.println("Go forward");
+  driveMotor1->run(BACKWARD);
+  driveMotor2->run(BACKWARD);
+  delay(10000);
+
+
 }
